@@ -69,7 +69,7 @@ const initCode = () => {
     const savedCode = localStorage.getItem('savedCode');
     let base64 = location.hash.substr(1);
     
-    if (base64.length === 0) {
+    if (urlHashIsEmpty()) {
         if(savedCode) {
             editor.setValue(savedCode);
         }
