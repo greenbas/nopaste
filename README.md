@@ -36,7 +36,7 @@ When you open a link, NoPaste reads, decodes, and decompresses whatever is after
 
 If there's no text to decompress, then NoPaste will pull data from localstorage if there is any any, and save any changes to localStorage. 
 
-> **Note:** Changes made to decompressed data aren't saved unless you click "Save to Local Storage"!
+> **Note:** Changes made to decompressed data aren't saved to localStorage unless you click "Save to Local Storage"!
 
 This process is done entirely **in your browser**, and the web server hosting NoPaste [never has access to the fragment](https://en.wikipedia.org/wiki/Fragment_identifier)
 
