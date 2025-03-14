@@ -5,8 +5,10 @@ let editor = null;
 let select = null;
 let clipboard = null;
 let statsEl = null;
+let localStorageSaveButton = null;
 
 const init = () => {
+    localStorageSaveButton = byId('local-storage-save');
     handleLegacyUrl();
     initCodeEditor();
     initLangSelector();
@@ -14,6 +16,8 @@ const init = () => {
     initClipboard();
     initModals();
 };
+
+const urlHashIsEmpty = () => location.hash.substr(1).length === 0
 
 const initCodeEditor = () => {
     CodeMirror.modeURL = 'https://cdn.jsdelivr.net/npm/codemirror@5.65.5/mode/%N/%N.js';
@@ -27,11 +31,15 @@ const initCodeEditor = () => {
     if (readOnly) {
         document.body.classList.add('readonly');
     }
-
+    
     statsEl = byId('stats');
+    
     editor.on('change', () => {
         statsEl.innerHTML = `Length: ${editor.getValue().length} |  Lines: ${editor['doc'].size}`;
         hideCopyBar();
+        if(urlHashIsEmpty()) {
+            localStorage.setItem('savedCode', editor.getValue());
+        }
     });
 };
 
@@ -58,8 +66,13 @@ const initLangSelector = () => {
 };
 
 const initCode = () => {
+    const savedCode = localStorage.getItem('savedCode');
     let base64 = location.hash.substr(1);
+    
     if (base64.length === 0) {
+        if(savedCode) {
+            editor.setValue(savedCode);
+        }
         return;
     }
     decompress(base64, (code, err) => {
@@ -68,6 +81,7 @@ const initCode = () => {
             MicroModal.show('error-modal');
             return;
         }
+        localStorageSaveButton.classList.remove('d-none');
         editor.setValue(code);
     });
 };
@@ -253,6 +267,12 @@ const shorten = (name) => {
     }
     return n.substr(0, 2) + n.substr(n.length - 2, 2);
 };
+
+const saveUrlDataToLocalHost = () => {
+    localStorage.setItem('savedCode', editor.getValue());
+    window.location.href = `${location.protocol}//${location.host}${location.pathname}`;
+    byId('local-storage-save').classList.add('d-none');
+}
 
 const byId = (id) => document.getElementById(id);
 
