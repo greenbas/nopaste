@@ -53,15 +53,16 @@ const initLangSelector = () => {
         })),
         showContent: 'down',
         onChange: (e) => {
-            const language = e.data || { mime: null, mode: null };
+            const language = e.data || { mime: null, mode: null, text: 'Plain Text' };
             editor.setOption('mode', language.mime);
             CodeMirror.autoLoadMode(editor, language.mode);
-            document.title = e.text && e.text !== 'Plain Text' ? `NoPaste - ${e.text} code snippet` : 'NoPaste';
+            localStorage.setItem('selectedLanguage', shorten(e.value))
+            document.title = e.text !== 'Plain Text' ? `NoPaste - ${e.text} code snippet` : 'NoPaste';
         },
     });
 
     // Set lang selector
-    const l = new URLSearchParams(window.location.search).get('l');
+    const l = new URLSearchParams(window.location.search).get('l') || localStorage.getItem('selectedLanguage');
     select.set(l ? decodeURIComponent(l) : shorten('Plain Text'));
 };
 
