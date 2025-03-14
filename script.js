@@ -271,7 +271,7 @@ const shorten = (name) => {
 
 const saveUrlDataToLocalStorage = () => {
     localStorage.setItem('savedCode', editor.getValue());
-    window.location.href = `${location.protocol}//${location.host}${location.pathname}`;
+    window.location.href = `${location.protocol}//${location.host}${location.pathname}${location.search}`;
     byId('local-storage-save').classList.add('d-none');
 }
 
